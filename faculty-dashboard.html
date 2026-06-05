@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard | VLITS Portal</title>
+    <link rel="stylesheet" href="css/style.css?v=1.1">
+    <!-- ChartJS for stats -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- College Header -->
+    <header class="college-header" style="height: var(--header-height); position: sticky; top: 0; z-index: 100;">
+        <div class="logo-container">
+            <a href="index.html" style="display: flex; align-items: center; gap: 1.5rem;">
+                <img class="college-logo-img" src="vignans_lara_logo.png" alt="VLITS Logo" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
+                <div id="logo-fallback" style="display:none; width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #0B2545, #A30000); color: #FFF; font-weight: 800; font-size: 1.1rem; align-items: center; justify-content: center; border: 2px solid #FFF;">VL</div>
+                <div class="logo-divider"></div>
+                <span class="portal-label">Faculty Terminal</span>
+            </a>
+        </div>
+        <div class="header-meta">
+            <div id="faculty-header-name" style="font-weight: 700; color: var(--color-primary); font-size: 0.95rem;">Dr. K. Srinivas Rao</div>
+            <div id="faculty-header-dept" style="font-size: 0.75rem; color: var(--color-text-muted);">Professor & HOD - CSE Dept</div>
+        </div>
+    </header>
+
+    <div class="dashboard-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" style="background-color: var(--color-primary-light); border-top: 1px solid rgba(255, 255, 255, 0.1);">
+            <div class="sidebar-profile" style="border-bottom: 1px solid rgba(255, 255, 255, 0.15);">
+                <div class="profile-avatar" id="sidebar-avatar" style="border-color: #FFFFFF;">👨‍🏫</div>
+                <div class="profile-info">
+                    <div class="profile-name" id="sidebar-name" style="color: #FFFFFF;">Dr. K. Srinivas Rao</div>
+                    <div class="profile-role" id="sidebar-dept" style="color: #CBD5E1;">Professor</div>
+                </div>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <ul>
+                    <li class="menu-item active" data-tab="tab-faculty-overview">
+                        <a><span class="menu-item-icon">📊</span> Course Overview</a>
+                    </li>
+                    <li class="menu-item" data-tab="tab-faculty-attendance">
+                        <a><span class="menu-item-icon">📝</span> Mark Attendance</a>
+                    </li>
+                    <li class="menu-item" data-tab="tab-faculty-marks">
+                        <a><span class="menu-item-icon">📝</span> Enter Mid Marks</a>
+                    </li>
+                    <li class="menu-item" data-tab="tab-faculty-import">
+                        <a><span class="menu-item-icon">🟢</span> Import Excel Sheet</a>
+                    </li>
+                    <li class="menu-item" data-tab="tab-faculty-analytics">
+                        <a><span class="menu-item-icon">📊</span> Student Roster Audit</a>
+                    </li>
+                    <li class="menu-item" data-tab="tab-faculty-lookup">
+                        <a><span class="menu-item-icon">🔍</span> Student Lookup</a>
+                    </li>
+                    <li class="menu-item" data-tab="tab-faculty-leaves">
+                        <a><span class="menu-item-icon">📋</span> Leave Requests</a>
+                    </li>
+                    <li class="menu-item" data-tab="tab-faculty-appointments">
+                        <a><span class="menu-item-icon">📅</span> Appointments Scheduler</a>
+                    </li>
+                    <li class="menu-item" data-tab="tab-faculty-chat">
+                        <a><span class="menu-item-icon">💬</span> Advising Messages</a>
+                    </li>
+                    <li class="menu-item" data-tab="tab-faculty-hod" id="sidebar-hod-item" style="display: none;">
+                        <a><span class="menu-item-icon">⚙️</span> HOD Admin Console</a>
+                    </li>
+                    <!-- Principal Menu Items -->
+                    <li class="menu-item" data-tab="tab-faculty-principal" id="sidebar-pr-dashboard" style="display: none;">
+                        <a><span class="menu-item-icon">👑</span> Principal Overview</a>
+                    </li>
+                    <li class="menu-item" data-tab="tab-principal-notices" id="sidebar-pr-notices" style="display: none;">
+                        <a><span class="menu-item-icon">📢</span> Manage Notices</a>
+                    </li>
+                    <li class="menu-item" data-tab="tab-principal-students" id="sidebar-pr-students" style="display: none;">
+                        <a><span class="menu-item-icon">👥</span> Student Registry</a>
+                    </li>
+                    <li class="menu-item" data-tab="tab-principal-leaves" id="sidebar-pr-leaves" style="display: none;">
+                        <a><span class="menu-item-icon">📋</span> HOD Leaves Approvals</a>
+                    </li>
+                    <li class="menu-item" data-tab="tab-principal-faculty" id="sidebar-pr-faculty" style="display: none;">
+                        <a><span class="menu-item-icon">👥</span> Faculty Registry</a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer" style="border-top: 1px solid rgba(255, 255, 255, 0.15);">
+                <button class="btn btn-logout" onclick="logoutFaculty()">🚪 Sign Out</button>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            
+            <!-- OVERVIEW TAB -->
+            <div id="tab-faculty-overview" class="dashboard-tab active-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>Course & Lectures Overview</h2>
+                        <p>Academic year schedule and statistics summary for your assigned classes</p>
+                    </div>
+                </div>
+
+                <div class="overview-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-details">
+                            <h4>Handling Subjects</h4>
+                            <div class="value" id="stat-handling-subjects">2</div>
+                        </div>
+                        <div class="stat-card-icon">📚</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-details">
+                            <h4>Lectures Registered</h4>
+                            <div class="value" id="stat-total-students">5 Students</div>
+                        </div>
+                        <div class="stat-card-icon">👥</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-details">
+                            <h4>Class Section</h4>
+                            <div class="value">3rd Year B</div>
+                        </div>
+                        <div class="stat-card-icon">🏫</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-row-split">
+                    <!-- Left: Profile details + Assigned subjects -->
+                    <div class="card-panel">
+                        <h3 class="card-panel-title">Assigned Course Load</h3>
+                        <div class="table-responsive">
+                            <table class="academic-table" id="assigned-courses-table">
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Course Title</th>
+                                        <th>Year & Section</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="assigned-courses-body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Right: Notice/Info Panel -->
+                    <div class="card-panel">
+                        <h3 class="card-panel-title">Quick Tasks</h3>
+                        <ul class="notice-list" style="font-size: 0.9rem;">
+                            <li style="padding: 0.5rem 0; display:flex; gap:0.5rem; align-items:center;">
+                                <span>📅</span> <a style="cursor:pointer; color:var(--color-primary-light); font-weight:600;" onclick="switchToTab('tab-faculty-attendance')">Mark Class Attendance</a>
+                            </li>
+                            <li style="padding: 0.5rem 0; display:flex; gap:0.5rem; align-items:center;">
+                                <span>📝</span> <a style="cursor:pointer; color:var(--color-primary-light); font-weight:600;" onclick="switchToTab('tab-faculty-marks')">Input Mid-I Marks</a>
+                            </li>
+                            <li style="padding: 0.5rem 0; display:flex; gap:0.5rem; align-items:center;">
+                                <span>📥</span> <a style="cursor:pointer; color:var(--color-primary-light); font-weight:600;" onclick="switchToTab('tab-faculty-import')">Import Student Excel Sheet</a>
+                            </li>
+                            <li style="padding: 0.5rem 0; display:flex; gap:0.5rem; align-items:center;">
+                                <span>📊</span> <a style="cursor:pointer; color:var(--color-primary-light); font-weight:600;" onclick="switchToTab('tab-faculty-analytics')">Check Detainment Risk List</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MARK ATTENDANCE TAB -->
+            <div id="tab-faculty-attendance" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>Record Lecture Attendance</h2>
+                        <p>Select course metrics, mark student roll-call presence list, and commit parameters to database</p>
+                    </div>
+                </div>
+
+                <!-- Selection Filters -->
+                <div class="filters-panel">
+                    <div class="filters-grid">
+                        <div class="form-group">
+                            <label for="att-select-subject">Assigned Course</label>
+                            <select id="att-select-subject" class="form-control">
+                                <!-- Loaded dynamically -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="att-date">Session Date</label>
+                            <input type="date" id="att-date" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="att-period">Lecture Period</label>
+                            <select id="att-period" class="form-control">
+                                <option value="Period 1 (09:00 - 09:50 AM)">Period 1</option>
+                                <option value="Period 2 (09:50 - 10:40 AM)">Period 2</option>
+                                <option value="Period 3 (11:00 - 11:50 AM)">Period 3</option>
+                                <option value="Period 4 (11:50 - 12:40 PM)">Period 4</option>
+                                <option value="Period 5 (01:40 - 02:30 PM)">Period 5</option>
+                                <option value="Period 6 (02:30 - 03:20 PM)">Period 6</option>
+                                <option value="Period 7 (03:20 - 04:10 PM)">Period 7</option>
+                            </select>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary" style="width: 100%; margin-bottom: 3px;" onclick="loadRosterForAttendance()">Load Class List</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Student Check List -->
+                <div class="card-panel" id="roster-panel-attendance" style="display:none;">
+                    <div class="roster-header-actions">
+                        <h4 style="font-family: var(--font-header); color: var(--color-primary);">Roster: CSE 3rd Year - B Section</h4>
+                        <div class="bulk-actions-group">
+                            <button class="btn btn-outline btn-sm" onclick="toggleAllAttendance(true)">Select All Present</button>
+                            <button class="btn btn-outline btn-sm" onclick="toggleAllAttendance(false)">Clear All</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="academic-table" id="attendance-roster-table">
+                            <thead>
+                                <tr>
+                                    <th class="checkbox-cell">Present</th>
+                                    <th>Registration No</th>
+                                    <th>Student Full Name</th>
+                                    <th class="text-center">Current Subject Attended</th>
+                                    <th class="text-center">Current Subject Total</th>
+                                    <th class="text-center">Current Attendance %</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendance-roster-body">
+                                <!-- Dynamic roster checklist -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem;">
+                        <button class="btn btn-outline" onclick="cancelAttendanceMarking()">Cancel</button>
+                        <button class="btn btn-secondary" onclick="submitAttendance()">Submit & Save Attendance Logs</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ENTER MARKS TAB -->
+            <div id="tab-faculty-marks" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>Record Assessment Grades</h2>
+                        <p>Submit Mid-I, Mid-II, Assignment, or Semester-End grades for your course branches</p>
+                    </div>
+                </div>
+
+                <!-- Selection Filters -->
+                <div class="filters-panel">
+                    <div class="filters-grid">
+                        <div class="form-group">
+                            <label for="marks-select-subject">Course Subject</label>
+                            <select id="marks-select-subject" class="form-control">
+                                <!-- Loaded dynamically -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="marks-select-exam">Assessment Category</label>
+                            <select id="marks-select-exam" class="form-control">
+                                <option value="mid1">Mid-I Descriptive (Max 20)</option>
+                                <option value="mid2">Mid-II Descriptive (Max 20)</option>
+                                <option value="assignment">Assignments / Quiz (Max 5)</option>
+                                <option value="external">Semester End Theory (Max 70)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary" style="width: 100%; margin-bottom: 3px;" onclick="loadRosterForMarks()">Load Grade Sheet</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Marks Input Grid -->
+                <div class="card-panel" id="roster-panel-marks" style="display:none;">
+                    <div class="roster-header-actions">
+                        <h4 style="font-family: var(--font-header); color: var(--color-primary);" id="marks-roster-title">Grade Registry: CSE 3rd Year B</h4>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="academic-table" id="marks-roster-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 200px;">Registration No</th>
+                                    <th>Student Full Name</th>
+                                    <th class="text-center" style="width: 220px;" id="exam-score-header-val">Exam Marks Score</th>
+                                    <th class="text-center">Current Total Internals</th>
+                                </tr>
+                            </thead>
+                            <tbody id="marks-roster-body">
+                                <!-- Dynamic input lines -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem;">
+                        <button class="btn btn-outline" onclick="cancelMarksEntry()">Cancel</button>
+                        <button class="btn btn-secondary" onclick="submitMarks()">Submit Exam Scores</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXCEL & AI SHEET IMPORT TAB -->
+            <div id="tab-faculty-import" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>Bulk Data & AI Roster Assistant</h2>
+                        <p>Import student attendance and assessment marks using spreadsheet files or our AI natural language data interpreter</p>
+                    </div>
+                </div>
+
+                <div class="dashboard-row-split-uneven">
+                    <!-- Left: CSV Upload & Preview -->
+                    <div>
+                        <div class="card-panel">
+                            <h3 class="card-panel-title">📁 Upload Student Spreadsheet (CSV)</h3>
+                            <div class="excel-import-box" id="drop-zone" onclick="triggerSimulatedFileSelect()">
+                                <span class="excel-import-icon">📥</span>
+                                <h4>Click or Drag CSV file here to upload</h4>
+                                <p>Parses standard custom CSV sheets. Header mapping is performed automatically.</p>
+                                
+                                <div class="excel-loading-spinner" id="excel-spinner"></div>
+                                <input type="file" id="simulated-file-input" style="display:none;" onchange="handleExcelFileSelect(this)">
+                            </div>
+                            
+                            <!-- Dynamic Preview Area for parsed files -->
+                            <div id="csv-preview-container" style="display: none; margin-top: 1.5rem;">
+                                <h4 style="margin-bottom: 0.75rem; color: var(--color-primary); font-size: 0.95rem;">Previewing Parsed Records:</h4>
+                                <div class="table-responsive" style="max-height: 250px; overflow-y: auto; border: 1px solid var(--color-border); border-radius: 6px;">
+                                    <table class="academic-table" id="csv-preview-table" style="font-size: 0.8rem; margin: 0;">
+                                        <thead>
+                                            <tr id="csv-preview-headers"></tr>
+                                        </thead>
+                                        <tbody id="csv-preview-body"></tbody>
+                                    </table>
+                                </div>
+                                <div style="margin-top: 1rem; display: flex; justify-content: flex-end; gap: 1rem;">
+                                    <button class="btn btn-secondary btn-sm" onclick="cancelCSVImport()">Cancel</button>
+                                    <button class="btn btn-primary btn-sm" id="btn-commit-csv" onclick="commitCSVImport()">Save Roster to Database</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Guidelines -->
+                        <div class="card-panel">
+                            <h3 class="card-panel-title">💡 Standard Format Guidelines</h3>
+                            <div class="calc-rules-notes" style="background-color: var(--color-bg-main); border:none; padding:0; margin:0;">
+                                <p>We support university-standard attendance register templates. Columns should contain <strong>REGD.NO</strong>, <strong>NAME</strong>, followed by subject codes (e.g. <code>MEFA</code>, <code>LCS</code>), with conducted hours in row 2, and student cells formatted as <code>attended(conducted)</code> (e.g. <code>12(18)</code>).</p>
+                                <div class="table-responsive" style="margin-top:0.75rem; border: 1px solid var(--color-border); border-radius: 6px;">
+                                    <table class="academic-table" style="font-size:0.7rem; background-color:#FFF; margin:0;">
+                                        <thead>
+                                            <tr>
+                                                <th>SL</th>
+                                                <th>REGD.NO</th>
+                                                <th>NAME</th>
+                                                <th>MEFA</th>
+                                                <th>LCS</th>
+                                                <th>EMWTL</th>
+                                                <th>ECA</th>
+                                                <th>TOTAL %</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr style="background-color: #F8FAFC; font-weight: bold; font-style: italic;">
+                                                <td></td>
+                                                <td></td>
+                                                <td>NO. OF CONDUCTED HOURS-></td>
+                                                <td>18</td>
+                                                <td>21</td>
+                                                <td>22</td>
+                                                <td>30</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>24FE1A0466</td>
+                                                <td>GOGULAMUDI BHANU TEJA</td>
+                                                <td>12(18)</td>
+                                                <td>13(21)</td>
+                                                <td>12(22)</td>
+                                                <td>22(30)</td>
+                                                <td>67.0</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td>24FE1A0467</td>
+                                                <td>GOLLAPUDI ADIVISHNU</td>
+                                                <td>16(18)</td>
+                                                <td>17(21)</td>
+                                                <td>18(22)</td>
+                                                <td>26(30)</td>
+                                                <td>84.0</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: AI Data Assistant Console -->
+                    <div>
+                        <div class="card-panel" style="border: 2px solid var(--color-primary-light); background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);">
+                            <h3 class="card-panel-title" style="color: var(--color-primary-light);">🧠 Copilot AI Data Assistant</h3>
+                            <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1rem;">
+                                Type commands in plain English. The AI agent will extract names, courses, and values, then make changes automatically.
+                            </p>
+                            
+                            <div class="form-group">
+                                <label for="ai-prompt-input" style="font-weight: 600; font-size: 0.85rem;">English Command Prompt</label>
+                                <textarea id="ai-prompt-input" class="form-control" rows="5" placeholder="Try typing:
+- Update 24FE1A0487 DBMS attendance to 48 attended out of 55 conducted
+- Add mid1 marks for 24FE1A0487 in OOPJ: 18.5 marks
+- Detain student 24FE1A0487
+- Suspend student 24FE1A0487" style="font-size: 0.85rem; line-height: 1.4; padding: 0.75rem; border: 1px solid var(--color-primary-light);"></textarea>
+                            </div>
+                            
+                            <button class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; background-color: var(--color-primary-light); border-color: var(--color-primary-light);" onclick="runAIDataInterpreter()">
+                                Spark AI Interpretation ✨
+                            </button>
+                            
+                            <!-- Dynamic AI Interpretation Preview Card -->
+                            <div id="ai-preview-card" style="display: none; margin-top: 1.5rem; padding: 1rem; background-color: #F1F5F9; border-left: 4px solid var(--color-safe); border-radius: 4px;">
+                                <h4 style="color: var(--color-primary); font-size: 0.85rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <span>🤖</span> AI Understanding Result:
+                                </h4>
+                                <div id="ai-preview-content" style="font-size: 0.8rem; color: var(--color-text-dark); line-height: 1.5;">
+                                    <!-- Dynamic text -->
+                                </div>
+                                <div style="margin-top: 1rem; display: flex; justify-content: flex-end; gap: 0.5rem;">
+                                    <button class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" onclick="clearAIInterpreter()">Discard</button>
+                                    <button class="btn btn-primary btn-sm" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background-color: var(--color-safe); border-color: var(--color-safe);" id="btn-apply-ai" onclick="applyAIInterpretation()">Commit Changes ✅</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STUDENT ROSTER AUDIT TAB -->
+            <div id="tab-faculty-analytics" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>Student Roster Audit & Detainment Warnings</h2>
+                        <p>Identify students at risk of exam disqualification based on their aggregate percentages</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary" onclick="exportAuditRosterToExcel()">📥 Export Roster to Excel</button>
+                    </div>
+                </div>
+
+                <div class="card-panel">
+                    <div class="table-responsive">
+                        <table class="academic-table" id="analytics-table">
+                            <thead>
+                                <tr>
+                                    <th>Registration No</th>
+                                    <th>Student Full Name</th>
+                                    <th>Branch / Section</th>
+                                    <th class="text-center">Agg. Conducted</th>
+                                    <th class="text-center">Agg. Attended</th>
+                                    <th class="text-center">Aggregate Attendance %</th>
+                                    <th>Eligibility Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="analytics-table-body">
+                                <!-- Loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STUDENT LOOKUP TAB -->
+            <div id="tab-faculty-lookup" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>Student Academic Lookup</h2>
+                        <p>Search student details by Registration Number, view academic logs, and write advisory feedback remarks</p>
+                    </div>
+                </div>
+
+                <div class="filters-panel" style="margin-bottom: 2rem;">
+                    <div class="filters-grid" style="max-width:600px;">
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label for="lookup-regd-input">Student Registration Number</label>
+                            <input type="text" id="lookup-regd-input" class="form-control" placeholder="e.g. 24FE1A0487" required>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary" style="width: 100%;" onclick="lookupStudentProfile()">Search Student</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile details (Hidden initially) -->
+                <div class="card-panel" id="lookup-results-panel" style="display:none;">
+                    <div class="dashboard-row-split">
+                        <div>
+                            <h3 class="card-panel-title">Student Profile Details</h3>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; font-size:0.9rem; margin-bottom:1.5rem;">
+                                <div>Name: <strong id="lookup-profile-name">--</strong></div>
+                                <div>Registration No: <strong id="lookup-profile-regd">--</strong></div>
+                                <div>Branch: <strong id="lookup-profile-branch">--</strong></div>
+                                <div>Year & Section: <strong id="lookup-profile-class">--</strong></div>
+                            </div>
+
+                            <h4 style="color:var(--color-primary); font-family:var(--font-header); font-size:0.95rem; margin-bottom:0.5rem;">Attendance Ledger</h4>
+                            <div class="table-responsive" style="margin-bottom:1.5rem;">
+                                <table class="academic-table" id="lookup-attendance-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Subject</th>
+                                            <th class="text-center">Attended</th>
+                                            <th class="text-center">Conducted</th>
+                                            <th class="text-center">Percentage</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="lookup-attendance-body"></tbody>
+                                </table>
+                            </div>
+
+                            <h4 style="color:var(--color-primary); font-family:var(--font-header); font-size:0.95rem; margin-bottom:0.5rem;">Examinations Internal Grades</h4>
+                            <div class="table-responsive">
+                                <table class="academic-table" id="lookup-marks-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Subject</th>
+                                            <th class="text-center">Mid-I</th>
+                                            <th class="text-center">Mid-II</th>
+                                            <th class="text-center">Assignment</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="lookup-marks-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Advisor Feedback Panel -->
+                        <div>
+                            <div class="card-panel" style="border: 1px solid var(--color-border); background-color: var(--color-bg-main); margin-bottom:0;">
+                                <h3 class="card-panel-title" style="border-bottom-color:#CBD5E1;">Academic Advisory Feedback</h3>
+                                
+                                <div class="form-group" style="margin-top:1rem;">
+                                    <label for="lookup-remarks-input" style="font-weight:600;">Faculty Advisor Remarks</label>
+                                    <textarea id="lookup-remarks-input" class="form-control" rows="6" style="resize:vertical;" placeholder="Write observations or guidelines for the student (e.g. attendance advice, academic feedback)..."></textarea>
+                                </div>
+                                
+                                <button class="btn btn-secondary" style="width:100%; margin-top:1rem;" onclick="saveStudentLookupRemarks()">Save Remarks & Sync Portal</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LEAVE REQUESTS TAB -->
+            <div id="tab-faculty-leaves" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>📋 Faculty Leave Management</h2>
+                        <p>Apply for leaves, view remaining leave entitlements, and track status history</p>
+                    </div>
+                </div>
+
+                <!-- Leave Stats Grid -->
+                <div class="overview-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card">
+                        <div class="stat-card-details">
+                            <h4>Casual Leaves</h4>
+                            <div class="value" id="leave-stat-cl">15 / 15</div>
+                        </div>
+                        <div class="stat-card-icon">🏖️</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-details">
+                            <h4>Sick Leaves</h4>
+                            <div class="value" id="leave-stat-sl">10 / 10</div>
+                        </div>
+                        <div class="stat-card-icon">🤒</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-details">
+                            <h4>Special / On Duty</h4>
+                            <div class="value" id="leave-stat-od">10 / 10</div>
+                        </div>
+                        <div class="stat-card-icon">💼</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-details">
+                            <h4>Pending Requests</h4>
+                            <div class="value" id="leave-stat-pending">0</div>
+                        </div>
+                        <div class="stat-card-icon">⌛</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-row-split-uneven">
+                    <!-- Apply Leave Form -->
+                    <div class="card-panel" style="height: fit-content;">
+                        <h3 class="card-panel-title">Apply for Leave</h3>
+                        <form id="leave-apply-form" onsubmit="event.preventDefault(); submitLeaveApplication();">
+                            <div class="form-group" style="margin-bottom: 1rem;">
+                                <label for="leave-type" style="font-weight: 600; font-size: 0.85rem;">Leave Category</label>
+                                <select id="leave-type" class="form-control" required>
+                                    <option value="Casual">Casual Leave (CL)</option>
+                                    <option value="Sick">Sick Leave (SL)</option>
+                                    <option value="On Duty">Special / On Duty (OD)</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1rem;">
+                                <label for="leave-date-from" style="font-weight: 600; font-size: 0.85rem;">From Date</label>
+                                <input type="date" id="leave-date-from" class="form-control" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1rem;">
+                                <label for="leave-date-to" style="font-weight: 600; font-size: 0.85rem;">To Date</label>
+                                <input type="date" id="leave-date-to" class="form-control" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1.25rem;">
+                                <label for="leave-reason" style="font-weight: 600; font-size: 0.85rem;">Reason for Leave</label>
+                                <textarea id="leave-reason" class="form-control" rows="4" placeholder="Brief explanation of your leave request..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-secondary" style="width: 100%; font-weight: 600;">Submit Application</button>
+                        </form>
+                    </div>
+
+                    <!-- Leave History -->
+                    <div class="card-panel" style="display: flex; flex-direction: column;">
+                        <h3 class="card-panel-title">Leave History & Status</h3>
+                        <div class="table-responsive" style="max-height: 480px; overflow-y: auto;">
+                            <table class="academic-table" id="leave-history-table" style="margin-top: 0; background-color: #FFF;">
+                                <thead style="position: sticky; top: 0; background-color: var(--color-primary-light); color: white; z-index: 10;">
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Duration</th>
+                                        <th>Days</th>
+                                        <th>Reason</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leave-history-body">
+                                    <!-- Dynamic leave rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- APPOINTMENTS SCHEDULER TAB -->
+            <div id="tab-faculty-appointments" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>📅 Appointments Scheduler</h2>
+                        <p>Manage appointment requests, schedule dates/times, set rooms, and review history</p>
+                    </div>
+                </div>
+
+                <!-- Appointment Stats Grid -->
+                <div class="overview-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card">
+                        <div class="stat-card-details">
+                            <h4>Pending Requests</h4>
+                            <div class="value" id="faculty-appt-stat-pending">0</div>
+                        </div>
+                        <div class="stat-card-icon">⌛</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-details">
+                            <h4>Scheduled & Responded</h4>
+                            <div class="value" id="faculty-appt-stat-responded">0</div>
+                        </div>
+                        <div class="stat-card-icon">🤝</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-row-split" style="display: grid; grid-template-columns: 1fr; gap: 2rem;">
+                    <!-- Pending Queue -->
+                    <div class="card-panel">
+                        <h3 class="card-panel-title">⏳ Pending Requests Queue</h3>
+                        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.25rem;">Student requests awaiting scheduling approval or rejection.</p>
+                        <div class="table-responsive">
+                            <table class="academic-table" id="faculty-pending-appointments-table" style="margin-top: 0; background-color: #FFF;">
+                                <thead style="background-color: var(--color-primary-light); color: white;">
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Regd No</th>
+                                        <th>Requested Date/Time</th>
+                                        <th>Reason</th>
+                                        <th style="width: 380px;">Scheduling Inputs & Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="faculty-pending-appointments-body">
+                                    <!-- Dynamic pending requests -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Approved Meetings Directory -->
+                    <div class="card-panel">
+                        <h3 class="card-panel-title">✅ Scheduled & Responded Directory</h3>
+                        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.25rem;">History log of all processed appointments and Scheduled Slots.</p>
+                        <div class="table-responsive">
+                            <table class="academic-table" id="faculty-approved-appointments-table" style="margin-top: 0; background-color: #FFF;">
+                                <thead style="background-color: var(--color-primary-light); color: white;">
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Regd No</th>
+                                        <th>Requested Slot</th>
+                                        <th>Scheduled Slot & Location</th>
+                                        <th>Reason</th>
+                                        <th>Remarks</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="faculty-approved-appointments-body">
+                                    <!-- Dynamic approved/rejected history -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FACULTY ADVISING CHAT TAB -->
+            <div id="tab-faculty-chat" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>💬 Student Advising Chat Box</h2>
+                        <p>Review student attendance justifications, medical proof notices, and respond to queries</p>
+                    </div>
+                </div>
+                
+                <div class="dashboard-row-split-uneven">
+                    <!-- Student Message Threads List -->
+                    <div class="card-panel" style="height: 520px; display: flex; flex-direction: column;">
+                        <h3 class="card-panel-title">Student Chats</h3>
+                        <div id="faculty-chat-threads" style="flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; padding-right: 0.5rem;">
+                            <!-- List of student avatars + names -->
+                        </div>
+                    </div>
+                    
+                    <!-- Active Chat Window -->
+                    <div class="card-panel" style="height: 520px; display: flex; flex-direction: column;" id="faculty-chat-window-container">
+                        <h3 class="card-panel-title" id="faculty-chat-title">Select a student thread to begin</h3>
+                        <div id="faculty-chat-messages" style="flex-grow: 1; overflow-y: auto; padding: 1.25rem; background-color: var(--color-bg-main); border-radius: var(--border-radius-md); border: 1px solid var(--color-border); margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
+                            <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: var(--color-text-muted); flex-direction: column; gap: 0.5rem;">
+                                <span style="font-size: 2.5rem;">💬</span>
+                                <span>Select a student thread from the left panel to load conversation history.</span>
+                            </div>
+                        </div>
+                        <div id="faculty-chat-controls" style="display: none; gap: 0.75rem;">
+                            <input type="text" id="chat-faculty-input" class="form-control" placeholder="Type response..." onkeydown="if(event.key === 'Enter') sendFacultyChatMessage()">
+                            <button class="btn btn-primary" onclick="sendFacultyChatMessage()" style="font-weight: 600; padding: 0.6rem 1.5rem;">Reply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HOD ADMIN CONSOLE TAB -->
+            <div id="tab-faculty-hod" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>⚙️ HOD Admin Console</h2>
+                        <p>Administrative control panel for announcements, student status management, and academic roster integrity</p>
+                    </div>
+                </div>
+
+                <div class="dashboard-row-split" style="grid-template-columns: 1fr; gap: 2.5rem; display: flex; flex-direction: column;">
+                    <!-- Section 1: Announcements and Events Manager -->
+                    <div class="card-panel">
+                        <h3 class="card-panel-title">📢 Notice Board & Calendar Manager</h3>
+                        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.5rem;">Add notices to the homepage board or key academic milestones to the calendar.</p>
+                        
+                        <div class="dashboard-row-split-uneven">
+                            <!-- Form to Add -->
+                            <div style="background-color: var(--color-bg-main); padding: 1.5rem; border-radius: var(--border-radius-md); border: 1px solid var(--color-border); height: fit-content;">
+                                <h4 style="margin-bottom: 1.25rem; color: var(--color-primary); font-family: var(--font-header); font-size: 1.05rem; border-bottom: 2px solid var(--color-border); padding-bottom: 0.5rem;">Create Announcement</h4>
+                                <div class="form-group" style="margin-bottom: 1rem;">
+                                    <label for="hod-ann-type" style="font-weight: 600; font-size: 0.85rem;">Category</label>
+                                    <select id="hod-ann-type" class="form-control">
+                                        <option value="notice">📢 Notice (Landing Board)</option>
+                                        <option value="calendar">🗓️ Academic Calendar Event</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 1rem;">
+                                    <label for="hod-ann-date" style="font-weight: 600; font-size: 0.85rem;">Display Date</label>
+                                    <input type="text" id="hod-ann-date" class="form-control" placeholder="e.g. 15-20 Jun or 10 Jun 2026">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 1rem;">
+                                    <label for="hod-ann-title" style="font-weight: 600; font-size: 0.85rem;">Title</label>
+                                    <input type="text" id="hod-ann-title" class="form-control" placeholder="Brief subject header">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 1.25rem;">
+                                    <label for="hod-ann-desc" style="font-weight: 600; font-size: 0.85rem;">Description</label>
+                                    <textarea id="hod-ann-desc" class="form-control" rows="4" placeholder="Detailed content of announcement..."></textarea>
+                                </div>
+                                <button class="btn btn-primary" style="width: 100%; font-weight: 600;" onclick="addAnnouncementByHod()">Publish Announcement</button>
+                            </div>
+                            
+                            <!-- Active Lists -->
+                            <div style="display: flex; flex-direction: column;">
+                                <h4 style="margin-bottom: 1.25rem; color: var(--color-primary); font-family: var(--font-header); font-size: 1.05rem; border-bottom: 2px solid var(--color-border); padding-bottom: 0.5rem;">Active Announcements</h4>
+                                <div class="table-responsive" style="max-height: 480px; overflow-y: auto; border: 1px solid var(--color-border); border-radius: var(--border-radius-md);">
+                                    <table class="academic-table" id="hod-announcements-table" style="margin-top: 0; background-color: #FFF;">
+                                        <thead style="position: sticky; top: 0; background-color: var(--color-primary-light); color: white; z-index: 10;">
+                                            <tr>
+                                                <th style="padding: 0.75rem 1rem;">Type</th>
+                                                <th style="padding: 0.75rem 1rem;">Date</th>
+                                                <th style="padding: 0.75rem 1rem;">Title</th>
+                                                <th style="padding: 0.75rem 1rem; width: 40%;">Description</th>
+                                                <th class="text-center" style="padding: 0.75rem 1rem; width: 80px;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="hod-announcements-body">
+                                            <!-- Dynamically generated announcements list with delete button -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Student Registry and Suspension Manager -->
+                    <div class="card-panel">
+                        <h3 class="card-panel-title">👥 Student Registry & Compliance Controls</h3>
+                        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.5rem;">Register new students, delete student accounts, or update standing status (Active, Detained, Suspended).</p>
+                        
+                        <div class="dashboard-row-split-uneven">
+                            <!-- Form to Add Student -->
+                            <div style="background-color: var(--color-bg-main); padding: 1.5rem; border-radius: var(--border-radius-md); border: 1px solid var(--color-border); height: fit-content;">
+                                <h4 style="margin-bottom: 1.25rem; color: var(--color-primary); font-family: var(--font-header); font-size: 1.05rem; border-bottom: 2px solid var(--color-border); padding-bottom: 0.5rem;">Register New Student</h4>
+                                <div class="form-group" style="margin-bottom: 1rem;">
+                                    <label for="hod-student-regd" style="font-weight: 600; font-size: 0.85rem;">Registration No (ID)</label>
+                                    <input type="text" id="hod-student-regd" class="form-control" placeholder="e.g. 24FE1A0410">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 1rem;">
+                                    <label for="hod-student-name" style="font-weight: 600; font-size: 0.85rem;">Full Name</label>
+                                    <input type="text" id="hod-student-name" class="form-control" placeholder="e.g. N. Rama Krishna">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 1rem;">
+                                    <label for="hod-student-branch" style="font-weight: 600; font-size: 0.85rem;">Branch</label>
+                                    <select id="hod-student-branch" class="form-control">
+                                        <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                                        <option value="Electronics & Communication Eng">Electronics & Communication Eng</option>
+                                        <option value="Information Technology">Information Technology</option>
+                                        <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                        <option value="Civil Engineering">Civil Engineering</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 1.25rem;">
+                                    <label for="hod-student-section" style="font-weight: 600; font-size: 0.85rem;">Section</label>
+                                    <select id="hod-student-section" class="form-control">
+                                        <option value="A">Section A</option>
+                                        <option value="B">Section B</option>
+                                        <option value="C">Section C</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-secondary" style="width: 100%; font-weight: 600;" onclick="addStudentByHod()">Register Student</button>
+                            </div>
+                            
+                            <!-- Roster list with controls -->
+                            <div style="display: flex; flex-direction: column;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 2px solid var(--color-border); padding-bottom: 0.5rem;">
+                                    <h4 style="color: var(--color-primary); margin: 0; font-family: var(--font-header); font-size: 1.05rem;">Student Roster & Compliance</h4>
+                                    <input type="text" id="hod-search-student" class="form-control" placeholder="🔍 Filter by name or roll no..." style="max-width: 240px; padding: 0.4rem 0.8rem; font-size: 0.8rem;" oninput="filterHodStudents()">
+                                </div>
+                                <div class="table-responsive" style="max-height: 480px; overflow-y: auto; border: 1px solid var(--color-border); border-radius: var(--border-radius-md);">
+                                    <table class="academic-table" id="hod-students-table" style="margin-top: 0; background-color: #FFF;">
+                                        <thead style="position: sticky; top: 0; background-color: var(--color-primary-light); color: white; z-index: 10;">
+                                            <tr>
+                                                <th style="padding: 0.75rem 1rem;">Regd No</th>
+                                                <th style="padding: 0.75rem 1rem;">Name</th>
+                                                <th style="padding: 0.75rem 1rem;">Branch & Sec</th>
+                                                <th style="padding: 0.75rem 1rem; width: 140px;">Standing Status</th>
+                                                <th class="text-center" style="padding: 0.75rem 1rem; width: 80px;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="hod-students-body">
+                                            <!-- Dynamically generated student records with status dropdown & delete button -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 3: Faculty Leave Approvals -->
+                    <div class="card-panel">
+                        <h3 class="card-panel-title">📋 Faculty Leave Approvals</h3>
+                        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.5rem;">Review and approve or reject leave requests submitted by faculty members.</p>
+                        
+                        <div class="table-responsive" style="border: 1px solid var(--color-border); border-radius: var(--border-radius-md);">
+                            <table class="academic-table" id="hod-leaves-table" style="margin-top: 0; background-color: #FFF;">
+                                <thead style="background-color: var(--color-primary-light); color: white;">
+                                    <tr>
+                                        <th style="padding: 0.75rem 1rem;">Faculty Name</th>
+                                        <th style="padding: 0.75rem 1rem;">Department</th>
+                                        <th style="padding: 0.75rem 1rem;">Category</th>
+                                        <th style="padding: 0.75rem 1rem;">Duration</th>
+                                        <th style="padding: 0.75rem 1rem;" class="text-center">Days</th>
+                                        <th style="padding: 0.75rem 1rem; width: 30%;">Reason</th>
+                                        <th class="text-center" style="padding: 0.75rem 1rem; width: 180px;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="hod-leaves-body">
+                                    <!-- Dynamic rows of pending leaves -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRINCIPAL ADMIN CONSOLE TAB -->
+                        <!-- 👑 Principal Dashboard Overview -->
+            <div id="tab-faculty-principal" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>👑 Principal Dashboard Overview</h2>
+                        <p>Welcome, Principal Dr. P. R. Prasad. Institutional Administrative Overview.</p>
+                    </div>
+                </div>
+
+                <!-- KPI Stats Grid -->
+                <div class="quick-stats-grid" style="margin-bottom: 2rem;">
+                    <div class="quick-stat-box" onclick="switchToTab('tab-principal-faculty')" style="cursor: pointer;">
+                        <span class="quick-stat-icon">👨‍🏫</span>
+                        <div class="quick-stat-number" id="pr-stat-faculty">0</div>
+                        <div class="quick-stat-label">Active Faculty Profiles</div>
+                    </div>
+                    <div class="quick-stat-box" onclick="switchToTab('tab-principal-students')" style="cursor: pointer;">
+                        <span class="quick-stat-icon">🎓</span>
+                        <div class="quick-stat-number" id="pr-stat-students">0</div>
+                        <div class="quick-stat-label">Registered Students</div>
+                    </div>
+                    <div class="quick-stat-box" onclick="switchToTab('tab-principal-leaves')" style="cursor: pointer;">
+                        <span class="quick-stat-icon">📋</span>
+                        <div class="quick-stat-number" id="pr-stat-leaves">0</div>
+                        <div class="quick-stat-label">Pending Leaves</div>
+                    </div>
+                    <div class="quick-stat-box" onclick="switchToTab('tab-principal-notices')" style="cursor: pointer;">
+                        <span class="quick-stat-icon">📢</span>
+                        <div class="quick-stat-number" id="pr-stat-notices">0</div>
+                        <div class="quick-stat-label">Active Notices</div>
+                    </div>
+                </div>
+
+                <!-- Welcome Card and Quick Links -->
+                <div class="card-panel">
+                    <h3 class="card-panel-title">⭐ Quick Administration Directory</h3>
+                    <p style="margin-bottom: 1.5rem;">Access individual management modules directly using the sidebar menu or the quick shortcuts below:</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;">
+                        <div class="stat-card" onclick="switchToTab('tab-principal-notices')" style="cursor: pointer; background-color: var(--color-bg-main); border: 1px solid var(--color-border); padding: 1.25rem;">
+                            <div class="stat-card-details">
+                                <h4 style="color: var(--color-primary); margin: 0 0 0.5rem 0; font-family: var(--font-header);">📢 Announcements</h4>
+                                <p style="font-size: 0.8rem; color: var(--color-text-muted); margin: 0;">Manage notice board events & milestones</p>
+                            </div>
+                        </div>
+                        <div class="stat-card" onclick="switchToTab('tab-principal-students')" style="cursor: pointer; background-color: var(--color-bg-main); border: 1px solid var(--color-border); padding: 1.25rem;">
+                            <div class="stat-card-details">
+                                <h4 style="color: var(--color-primary); margin: 0 0 0.5rem 0; font-family: var(--font-header);">👥 Student Registry</h4>
+                                <p style="font-size: 0.8rem; color: var(--color-text-muted); margin: 0;">CRUD actions, detention & standing status</p>
+                            </div>
+                        </div>
+                        <div class="stat-card" onclick="switchToTab('tab-principal-leaves')" style="cursor: pointer; background-color: var(--color-bg-main); border: 1px solid var(--color-border); padding: 1.25rem;">
+                            <div class="stat-card-details">
+                                <h4 style="color: var(--color-primary); margin: 0 0 0.5rem 0; font-family: var(--font-header);">📋 HOD Leave Queue</h4>
+                                <p style="font-size: 0.8rem; color: var(--color-text-muted); margin: 0;">Approve or reject leaves for department heads</p>
+                            </div>
+                        </div>
+                        <div class="stat-card" onclick="switchToTab('tab-principal-faculty')" style="cursor: pointer; background-color: var(--color-bg-main); border: 1px solid var(--color-border); padding: 1.25rem;">
+                            <div class="stat-card-details">
+                                <h4 style="color: var(--color-primary); margin: 0 0 0.5rem 0; font-family: var(--font-header);">👥 Faculty Registry</h4>
+                                <p style="font-size: 0.8rem; color: var(--color-text-muted); margin: 0;">Register & delete accounts, toggle roles</p>
+                            </div>
+                        </div>
+                </div>
+
+                <!-- Institutional Analytics Reports -->
+                <div class="dashboard-row-split-uneven" style="margin-top: 2rem;">
+                    <!-- Student Compliance Ratio Chart -->
+                    <div class="card-panel" style="margin-bottom: 0;">
+                        <h3 class="card-panel-title">📊 Student Standing Compliance Ratio</h3>
+                        <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 1rem;">Doughnut chart of student standing classifications (Active, Suspended, Detained).</p>
+                        <div style="position: relative; height: 260px; width: 100%; display: flex; justify-content: center; align-items: center;">
+                            <canvas id="chart-pr-compliance" style="max-height: 240px; max-width: 240px;"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Department Leave Ratio Tracker -->
+                    <div class="card-panel" style="margin-bottom: 0;">
+                        <h3 class="card-panel-title">📋 Approved Leaves by Department</h3>
+                        <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 1rem;">Total approved leaves logged by department faculty members.</p>
+                        <div style="position: relative; height: 260px; width: 100%;">
+                            <canvas id="chart-pr-leaves"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 📢 Notice Board & Calendar Manager -->
+            <div id="tab-principal-notices" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>📢 Manage Academic Announcements</h2>
+                        <p>Publish landing page notices or calendar events for students and staff</p>
+                    </div>
+                </div>
+                <div class="dashboard-row-split" style="grid-template-columns: 1fr; gap: 2.5rem; display: flex; flex-direction: column;">
+                    <!-- Section 1: Announcements and Events Manager -->
+                    <div class="card-panel">
+                        <h3 class="card-panel-title">📢 Notice Board & Calendar Manager</h3>
+                        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.5rem;">Add notices to the homepage board or key academic milestones to the calendar.</p>
+                        
+                        <div class="dashboard-row-split-uneven">
+                            <!-- Form to Add -->
+                            <div style="background-color: var(--color-bg-main); padding: 1.5rem; border-radius: var(--border-radius-md); border: 1px solid var(--color-border); height: fit-content;">
+                                <h4 style="margin-bottom: 1.25rem; color: var(--color-primary); font-family: var(--font-header); font-size: 1.05rem; border-bottom: 2px solid var(--color-border); padding-bottom: 0.5rem;">Create Announcement</h4>
+                                <div class="form-group" style="margin-bottom: 1rem;">
+                                    <label for="pr-ann-type" style="font-weight: 600; font-size: 0.85rem;">Category</label>
+                                    <select id="pr-ann-type" class="form-control">
+                                        <option value="notice">📢 Notice (Landing Board)</option>
+                                        <option value="calendar">🗓️ Academic Calendar Event</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 1rem;">
+                                    <label for="pr-ann-date" style="font-weight: 600; font-size: 0.85rem;">Display Date</label>
+                                    <input type="text" id="pr-ann-date" class="form-control" placeholder="e.g. 15-20 Jun or 10 Jun 2026">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 1rem;">
+                                    <label for="pr-ann-title" style="font-weight: 600; font-size: 0.85rem;">Title</label>
+                                    <input type="text" id="pr-ann-title" class="form-control" placeholder="Brief subject header">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 1.25rem;">
+                                    <label for="pr-ann-desc" style="font-weight: 600; font-size: 0.85rem;">Description</label>
+                                    <textarea id="pr-ann-desc" class="form-control" rows="4" placeholder="Detailed content of announcement..."></textarea>
+                                </div>
+                                <button class="btn btn-primary" style="width: 100%; font-weight: 600;" onclick="addAnnouncementByPrincipal()">Publish Announcement</button>
+                            </div>
+                            
+                            <!-- Active Lists -->
+                            <div style="display: flex; flex-direction: column;">
+                                <h4 style="margin-bottom: 1.25rem; color: var(--color-primary); font-family: var(--font-header); font-size: 1.05rem; border-bottom: 2px solid var(--color-border); padding-bottom: 0.5rem;">Active Announcements</h4>
+                                <div class="table-responsive" style="max-height: 300px; overflow-y: auto; border: 1px solid var(--color-border); border-radius: var(--border-radius-md);">
+                                    <table class="academic-table" id="pr-announcements-table" style="margin-top: 0; background-color: #FFF;">
+                                        <thead style="position: sticky; top: 0; background-color: var(--color-primary-light); color: white; z-index: 10;">
+                                            <tr>
+                                                <th style="padding: 0.75rem 1rem;">Type</th>
+                                                <th style="padding: 0.75rem 1rem;">Date</th>
+                                                <th style="padding: 0.75rem 1rem;">Title</th>
+                                                <th style="padding: 0.75rem 1rem; width: 40%;">Description</th>
+                                                <th class="text-center" style="padding: 0.75rem 1rem; width: 80px;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="pr-announcements-body">
+                                            <!-- Dynamically generated announcements list -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 👥 Student Registry & Compliance Controls -->
+            <div id="tab-principal-students" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>👥 Student Registry & Compliance</h2>
+                        <p>Register new student accounts, delete records, and modify academic standing statuses</p>
+                    </div>
+                </div>
+                <div class="dashboard-row-split" style="grid-template-columns: 1fr; gap: 2.5rem; display: flex; flex-direction: column;">
+                    <!-- Section 2: Student Registry and Suspension Manager -->
+                    <div class="card-panel">
+                        <h3 class="card-panel-title">👥 Student Registry & Compliance Controls</h3>
+                        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.5rem;">Register new students, delete student accounts, or update standing status (Active, Detained, Suspended).</p>
+                        
+                        <div class="dashboard-row-split-uneven">
+                            <!-- Form to Add Student -->
+                            <div style="background-color: var(--color-bg-main); padding: 1.5rem; border-radius: var(--border-radius-md); border: 1px solid var(--color-border); height: fit-content;">
+                                <h4 style="margin-bottom: 1.25rem; color: var(--color-primary); font-family: var(--font-header); font-size: 1.05rem; border-bottom: 2px solid var(--color-border); padding-bottom: 0.5rem;">Register New Student</h4>
+                                <div class="form-group" style="margin-bottom: 1rem;">
+                                    <label for="pr-student-regd" style="font-weight: 600; font-size: 0.85rem;">Registration No (ID)</label>
+                                    <input type="text" id="pr-student-regd" class="form-control" placeholder="e.g. 24FE1A0410">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 1rem;">
+                                    <label for="pr-student-name" style="font-weight: 600; font-size: 0.85rem;">Full Name</label>
+                                    <input type="text" id="pr-student-name" class="form-control" placeholder="e.g. N. Rama Krishna">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 1rem;">
+                                    <label for="pr-student-branch" style="font-weight: 600; font-size: 0.85rem;">Branch</label>
+                                    <select id="pr-student-branch" class="form-control">
+                                        <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                                        <option value="Electronics & Communication Eng">Electronics & Communication Eng</option>
+                                        <option value="Information Technology">Information Technology</option>
+                                        <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                        <option value="Civil Engineering">Civil Engineering</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 1.25rem;">
+                                    <label for="pr-student-section" style="font-weight: 600; font-size: 0.85rem;">Section</label>
+                                    <select id="pr-student-section" class="form-control">
+                                        <option value="A">Section A</option>
+                                        <option value="B">Section B</option>
+                                        <option value="C">Section C</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-secondary" style="width: 100%; font-weight: 600;" onclick="addStudentByPrincipal()">Register Student</button>
+                            </div>
+                            
+                            <!-- Roster list with controls -->
+                            <div style="display: flex; flex-direction: column;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 2px solid var(--color-border); padding-bottom: 0.5rem;">
+                                    <h4 style="color: var(--color-primary); margin: 0; font-family: var(--font-header); font-size: 1.05rem;">Student Roster & Compliance</h4>
+                                    <input type="text" id="pr-search-student" class="form-control" placeholder="🔍 Filter by name or roll no..." style="max-width: 240px; padding: 0.4rem 0.8rem; font-size: 0.8rem;" oninput="filterPrincipalStudents()">
+                                </div>
+                                <div class="table-responsive" style="max-height: 300px; overflow-y: auto; border: 1px solid var(--color-border); border-radius: var(--border-radius-md);">
+                                    <table class="academic-table" id="pr-students-table" style="margin-top: 0; background-color: #FFF;">
+                                        <thead style="position: sticky; top: 0; background-color: var(--color-primary-light); color: white; z-index: 10;">
+                                            <tr>
+                                                <th style="padding: 0.75rem 1rem;">Regd No</th>
+                                                <th style="padding: 0.75rem 1rem;">Name</th>
+                                                <th style="padding: 0.75rem 1rem;">Branch & Sec</th>
+                                                <th style="padding: 0.75rem 1rem; width: 140px;">Standing Status</th>
+                                                <th class="text-center" style="padding: 0.75rem 1rem; width: 80px;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="pr-students-body">
+                                            <!-- Dynamically generated student records -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 📋 HOD & Faculty Leave Approvals -->
+            <div id="tab-principal-leaves" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>📋 HOD & Faculty Leave Approvals</h2>
+                        <p>Approve or reject leaves submitted by department heads and academic faculty</p>
+                    </div>
+                </div>
+                <div class="dashboard-row-split" style="grid-template-columns: 1fr; gap: 2.5rem; display: flex; flex-direction: column;">
+                    <!-- Section 3: Faculty Leave Approvals -->
+                    <div class="card-panel">
+                        <h3 class="card-panel-title">📋 HOD & Faculty Leave Approvals</h3>
+                        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.5rem;">Review and approve or reject leave requests submitted by HODs and other faculty members.</p>
+                        
+                        <div class="table-responsive" style="border: 1px solid var(--color-border); border-radius: var(--border-radius-md);">
+                            <table class="academic-table" id="pr-leaves-table" style="margin-top: 0; background-color: #FFF;">
+                                <thead style="background-color: var(--color-primary-light); color: white;">
+                                    <tr>
+                                        <th style="padding: 0.75rem 1rem;">Faculty Name</th>
+                                        <th style="padding: 0.75rem 1rem;">Department</th>
+                                        <th style="padding: 0.75rem 1rem;">Category</th>
+                                        <th style="padding: 0.75rem 1rem;">Duration</th>
+                                        <th style="padding: 0.75rem 1rem;" class="text-center">Days</th>
+                                        <th style="padding: 0.75rem 1rem; width: 30%;">Reason</th>
+                                        <th class="text-center" style="padding: 0.75rem 1rem; width: 180px;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pr-leaves-body">
+                                    <!-- Dynamic rows of pending leaves -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 👥 Faculty Registry Management -->
+            <div id="tab-principal-faculty" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>👥 Faculty Registry Management</h2>
+                        <p>Manage faculty profiles, designations, departments, and academic roles</p>
+                    </div>
+                </div>
+                <div class="dashboard-row-split" style="grid-template-columns: 1fr; gap: 2.5rem; display: flex; flex-direction: column;">
+                    <!-- Section 4: Faculty Registry Manager -->
+                    <div class="card-panel">
+                        <h3 class="card-panel-title">👥 Faculty Registry Management</h3>
+                        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.5rem;">Register new faculty profiles, designate HODs, or delete faculty records from the system.</p>
+                        
+                        <div class="dashboard-row-split-uneven">
+                            <!-- Form to Add Faculty -->
+                            <div style="background-color: var(--color-bg-main); padding: 1.5rem; border-radius: var(--border-radius-md); border: 1px solid var(--color-border); height: fit-content;">
+                                <h4 style="margin-bottom: 1.25rem; color: var(--color-primary); font-family: var(--font-header); font-size: 1.05rem; border-bottom: 2px solid var(--color-border); padding-bottom: 0.5rem;">Register New Faculty</h4>
+                                <div class="form-group" style="margin-bottom: 1rem;">
+                                    <label for="pr-faculty-id" style="font-weight: 600; font-size: 0.85rem;">Employee ID / Username</label>
+                                    <input type="text" id="pr-faculty-id" class="form-control" placeholder="e.g. faculty3">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 1rem;">
+                                    <label for="pr-faculty-name" style="font-weight: 600; font-size: 0.85rem;">Full Name</label>
+                                    <input type="text" id="pr-faculty-name" class="form-control" placeholder="e.g. Dr. A. Chandra Sekhar">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 1rem;">
+                                    <label for="pr-faculty-dept" style="font-weight: 600; font-size: 0.85rem;">Department</label>
+                                    <select id="pr-faculty-dept" class="form-control">
+                                        <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                                        <option value="Electronics & Communication Eng">Electronics & Communication Eng</option>
+                                        <option value="Information Technology">Information Technology</option>
+                                        <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                        <option value="Civil Engineering">Civil Engineering</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 1rem;">
+                                    <label for="pr-faculty-desig" style="font-weight: 600; font-size: 0.85rem;">Designation</label>
+                                    <input type="text" id="pr-faculty-desig" class="form-control" placeholder="e.g. Associate Professor">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 1.25rem;">
+                                    <label for="pr-faculty-role" style="font-weight: 600; font-size: 0.85rem;">Academic Role</label>
+                                    <select id="pr-faculty-role" class="form-control">
+                                        <option value="faculty">Faculty Member</option>
+                                        <option value="hod">HOD (Department Head)</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary" style="width: 100%; font-weight: 600;" onclick="addFacultyByPrincipal()">Register Faculty</button>
+                            </div>
+                            
+                            <!-- Faculty list with controls -->
+                            <div style="display: flex; flex-direction: column;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 2px solid var(--color-border); padding-bottom: 0.5rem;">
+                                    <h4 style="color: var(--color-primary); margin: 0; font-family: var(--font-header); font-size: 1.05rem;">Active Faculty Directory</h4>
+                                    <input type="text" id="pr-search-faculty" class="form-control" placeholder="🔍 Filter by name or ID..." style="max-width: 240px; padding: 0.4rem 0.8rem; font-size: 0.8rem;" oninput="filterPrincipalFaculty()">
+                                </div>
+                                <div class="table-responsive" style="max-height: 480px; overflow-y: auto; border: 1px solid var(--color-border); border-radius: var(--border-radius-md);">
+                                    <table class="academic-table" id="pr-faculty-table" style="margin-top: 0; background-color: #FFF;">
+                                        <thead style="position: sticky; top: 0; background-color: var(--color-primary-light); color: white; z-index: 10;">
+                                            <tr>
+                                                <th style="padding: 0.75rem 1rem;">ID</th>
+                                                <th style="padding: 0.75rem 1rem;">Name</th>
+                                                <th style="padding: 0.75rem 1rem;">Department & Desig</th>
+                                                <th style="padding: 0.75rem 1rem; width: 100px;">Role</th>
+                                                <th class="text-center" style="padding: 0.75rem 1rem; width: 80px;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="pr-faculty-body">
+                                            <!-- Dynamically generated faculty records -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</main>
+    </div>
+
+    <!-- Toast Notice -->
+    <div class="toast" id="faculty-toast" style="border-left-color: var(--color-secondary);">
+        <span id="toast-icon">ℹ️</span>
+        <span id="toast-message">Logged in successfully!</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/data.js?v=1.1"></script>
+    <script src="js/faculty.js?v=1.1"></script>
+</body>
+</html>

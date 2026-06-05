@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Login | VLITS Portal</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- College Header -->
+    <header class="college-header" style="height: var(--header-height);">
+        <div class="logo-container">
+            <a href="index.html" style="display: flex; align-items: center; gap: 1.5rem;">
+                <img class="college-logo-img" src="vignans_lara_logo.png" alt="VLITS Logo" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
+                <div id="logo-fallback" style="display:none; width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #0B2545, #A30000); color: #FFF; font-weight: 800; font-size: 1.2rem; align-items: center; justify-content: center; border: 2px solid #FFF;">VL</div>
+                <div class="logo-divider"></div>
+                <span class="portal-label">Faculty Terminal</span>
+            </a>
+        </div>
+        <div class="header-meta">
+            <div style="font-size: 0.8rem; color: var(--color-secondary); font-weight: 700;">AUTONOMOUS COLLEGE PORTAL</div>
+        </div>
+    </header>
+
+    <!-- Login Card Container -->
+    <main class="login-container">
+        <div class="login-card login-card-faculty">
+            <h2>Faculty Sign In</h2>
+            <p class="login-subtitle">Enter your employee credentials to access your course rosters</p>
+            
+            <div class="error-message" id="login-error-msg"></div>
+
+            <form id="faculty-login-form">
+                <div class="form-group">
+                    <label for="faculty-id">Employee ID</label>
+                    <input type="text" id="faculty-id" class="form-control" placeholder="e.g. 24FE1A0487" required autocomplete="username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="faculty-password">Password</label>
+                    <input type="password" id="faculty-password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+                </div>
+
+                <button type="submit" class="btn btn-secondary login-btn">Sign In to Faculty Dashboard →</button>
+            </form>
+
+            <div class="login-info-box" style="border-left: 3px solid var(--color-secondary);">
+                🔑 For testing convenience, use:<br>
+                HOD Account: ID <strong>hod</strong> / Pass <strong>hod</strong><br>
+                Regular Faculty: ID <strong>24fe1a0487</strong> / Pass <strong>24fe1a0487</strong>
+            </div>
+
+            <div style="text-align: center; margin-top: 1.5rem; font-size: 0.85rem;">
+                <a href="index.html" style="color: var(--color-primary); font-weight: 550; display: inline-flex; align-items: center; gap: 0.25rem;">
+                    ← Return to Home Page
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="college-footer" style="padding: 1.5rem 2rem; border-top: none; background-color: var(--color-primary-light);">
+        <div style="max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: #E2E8F0; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                © 2026 Vignan's Lara Institute of Technology & Science.
+            </div>
+            <div>
+                Affiliated to JNTUK Kakinada | Faculty Portal Services
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script>
+        // Check if already logged in as faculty
+        DB.getLoggedInUser().then(currentSession => {
+            if (currentSession && currentSession.type === 'faculty') {
+                window.location.href = 'faculty-dashboard.html';
+            }
+        });
+
+        // Form Submit Handler
+        document.getElementById('faculty-login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const facultyId = document.getElementById('faculty-id').value.trim();
+            const password = document.getElementById('faculty-password').value;
+            const errorMsg = document.getElementById('login-error-msg');
+            
+            errorMsg.style.display = 'none';
+
+            const user = await DB.loginFaculty(facultyId, password);
+            if (user) {
+                // Success
+                window.location.href = 'faculty-dashboard.html';
+            } else {
+                // Failure
+                errorMsg.innerText = "Invalid Employee ID or Password. Please try again.";
+                errorMsg.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

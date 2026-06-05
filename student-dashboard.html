@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | VLITS Portal</title>
+    <link rel="stylesheet" href="css/style.css?v=1.1">
+    <!-- ChartJS for stats -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- College Header -->
+    <header class="college-header" style="height: var(--header-height); position: sticky; top: 0; z-index: 100;">
+        <div class="logo-container">
+            <a href="index.html" style="display: flex; align-items: center; gap: 1.5rem;">
+                <img class="college-logo-img" src="vignans_lara_logo.png" alt="VLITS Logo" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
+                <div id="logo-fallback" style="display:none; width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #0B2545, #A30000); color: #FFF; font-weight: 800; font-size: 1.1rem; align-items: center; justify-content: center; border: 2px solid #FFF;">VL</div>
+                <div class="logo-divider"></div>
+                <span class="portal-label">Student Terminal</span>
+            </a>
+        </div>
+        <div class="header-meta">
+            <div id="student-header-name" style="font-weight: 700; color: var(--color-primary); font-size: 0.95rem;">P. Sai Prashanth (24FE1A0487)</div>
+            <div id="student-header-sem" style="font-size: 0.75rem; color: var(--color-text-muted);">B.Tech CSE - 3rd Year 1st Sem</div>
+        </div>
+    </header>
+
+    <div class="dashboard-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-profile">
+                <div class="profile-avatar" id="sidebar-avatar">👨‍🎓</div>
+                <div class="profile-info">
+                    <div class="profile-name" id="sidebar-name">P. Sai Prashanth</div>
+                    <div class="profile-role" id="sidebar-regd">24FE1A0487</div>
+                </div>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <ul>
+                    <li class="menu-item active" data-tab="tab-overview">
+                        <a><span class="menu-item-icon">📊</span> Dashboard</a>
+                    </li>
+                    <li class="menu-item" data-tab="tab-attendance">
+                        <a><span class="menu-item-icon">📅</span> Attendance Ledger</a>
+                    </li>
+                    <li class="menu-item" data-tab="tab-marks">
+                        <a><span class="menu-item-icon">📝</span> Semester Marks</a>
+                    </li>
+                    <li class="menu-item" data-tab="tab-fees">
+                        <a><span class="menu-item-icon">💸</span> Fee Payment</a>
+                    </li>
+                    <li class="menu-item" data-tab="tab-stats">
+                        <a><span class="menu-item-icon">📈</span> Performance Stats</a>
+                    </li>
+                    <li class="menu-item" data-tab="tab-calculator">
+                        <a><span class="menu-item-icon">🧮</span> Attendance Calc</a>
+                    </li>
+                    <li class="menu-item" data-tab="tab-student-appointments">
+                        <a><span class="menu-item-icon">📅</span> Appointments</a>
+                    </li>
+                    <li class="menu-item" data-tab="tab-student-advisor-chat">
+                        <a><span class="menu-item-icon">💬</span> Advisor Chat</a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button class="btn btn-logout" onclick="logoutStudent()">🚪 Sign Out</button>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            
+            <!-- OVERVIEW TAB -->
+            <div id="tab-overview" class="dashboard-tab active-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>Dashboard Overview</h2>
+                        <p>Summary of your academic and financial standing in the current semester</p>
+                    </div>
+                    <div id="overview-badge-container">
+                        <!-- Dynamic Badge -->
+                    </div>
+                </div>
+
+                <div class="overview-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-details">
+                            <h4>Aggregate Attendance</h4>
+                            <div class="value" id="stat-agg-attendance">--%</div>
+                        </div>
+                        <div class="stat-card-icon" id="stat-attendance-icon">📅</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-details">
+                            <h4>Mid-I Performance</h4>
+                            <div class="value" id="stat-mid-performance">--%</div>
+                        </div>
+                        <div class="stat-card-icon">📝</div>
+                    </div>
+                    <div class="stat-card stat-card-accent" id="fee-due-card">
+                        <div class="stat-card-details">
+                            <h4>Pending Fee Dues</h4>
+                            <div class="value" id="stat-fee-dues">₹0</div>
+                        </div>
+                        <div class="stat-card-icon">💸</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-row-split">
+                    <!-- Left: Profile details + Announcements -->
+                    <div>
+                        <!-- Flip-Anim Digital ID Card -->
+                        <div class="id-card-wrapper" onclick="toggleIdCardFlip()">
+                            <div class="id-card-inner" id="digital-id-card">
+                                <!-- Card Front (Academic) -->
+                                <div class="id-card-front">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(255, 255, 255, 0.25); padding-bottom: 0.5rem; margin-bottom: 0.75rem;">
+                                        <div style="font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px;">VLITS AUTONOMOUS</div>
+                                        <div style="font-size: 0.65rem; background-color: var(--color-secondary); color: white; padding: 0.15rem 0.4rem; border-radius: 4px; font-weight: 700;">STUDENT ID</div>
+                                    </div>
+                                    <div style="display: flex; gap: 0.8rem; align-items: flex-start;">
+                                        <img id="id-card-avatar" src="vignans_lara_logo.png" style="width: 60px; height: 60px; border-radius: 6px; border: 1.5px solid rgba(255, 255, 255, 0.4); object-fit: cover; background-color: #fff;" alt="Student Avatar">
+                                        <div style="flex-grow: 1; min-width: 0; font-size: 0.8rem;">
+                                            <h4 id="id-card-name" style="margin: 0 0 0.25rem 0; font-size: 0.95rem; font-weight: 700; color: #FFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">--</h4>
+                                            <div style="margin-bottom: 0.15rem;"><span style="opacity: 0.75; font-size: 0.7rem;">Regd:</span> <strong id="id-card-regd" style="color: #FFF;">--</strong></div>
+                                            <div style="margin-bottom: 0.15rem;"><span style="opacity: 0.75; font-size: 0.7rem;">Branch:</span> <strong id="id-card-branch" style="color: #FFF; font-size: 0.7rem;">--</strong></div>
+                                            <div><span style="opacity: 0.75; font-size: 0.7rem;">Sec/Sem:</span> <strong id="id-card-sec-sem" style="color: #FFF;">--</strong></div>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255, 255, 255, 0.15); padding-top: 0.4rem; font-size: 0.6rem; opacity: 0.85;">
+                                        <span>Regulation: R23 (Autonomous)</span>
+                                        <span style="color: #4ADE80; font-weight: 700; display: flex; align-items: center; gap: 2px;">● ACTIVE STUDENT</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Card Back (Library & Meta) -->
+                                <div class="id-card-back">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid var(--color-border); padding-bottom: 0.5rem; margin-bottom: 0.75rem;">
+                                        <div style="font-size: 0.7rem; font-weight: 800; color: var(--color-primary);">LIBRARY & GENERAL DETAILS</div>
+                                        <div style="font-size: 0.65rem; color: var(--color-text-muted);">FLIP 🔄</div>
+                                    </div>
+                                    <div style="text-align: left; font-size: 0.8rem; line-height: 1.5; color: var(--color-text-dark);">
+                                        <div style="margin-bottom: 0.4rem;"><span style="color: var(--color-text-muted);">Library Reg No:</span> <strong id="id-card-lib-reg">LIB-24FE0487</strong></div>
+                                        <div style="margin-bottom: 0.4rem;"><span style="color: var(--color-text-muted);">Emergency contact:</span> <strong>+91 98765 43210</strong></div>
+                                        <div style="margin-bottom: 0.4rem;"><span style="color: var(--color-text-muted);">Blood Group:</span> <strong style="color: var(--color-danger);">O+ Positive</strong></div>
+                                        <div><span style="color: var(--color-text-muted);">College Bus Route:</span> <strong>Route 14 (Guntur)</strong></div>
+                                    </div>
+                                    <div style="margin-top: auto; border-top: 1px solid var(--color-border); padding-top: 0.4rem; font-size: 0.55rem; color: var(--color-text-muted); line-height: 1.2; text-align: center;">
+                                        This card is the property of VLITS. If found, return to administration office.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-panel">
+                            <h3 class="card-panel-title">Recent Attendance Notifications</h3>
+                            <div id="dashboard-alerts-list">
+                                <!-- Dynamic notifications -->
+                            </div>
+                        </div>
+
+                        <div class="card-panel" style="border-left: 4px solid var(--color-secondary);">
+                            <h3 class="card-panel-title">Faculty Advisor Remarks & Feedback</h3>
+                            <div id="overview-advisor-remarks" style="font-size: 0.95rem; font-style: italic; color: var(--color-text-dark); background-color: var(--color-bg-main); padding: 1rem; border-radius: 6px; border: 1px solid var(--color-border); line-height: 1.5; white-space: pre-line;">
+                                No feedback entered yet.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Big Circular Attendance Tracker -->
+                    <div class="card-panel">
+                        <h3 class="card-panel-title" style="justify-content: center;">Attendance Standing</h3>
+                        <div class="circular-progress-panel">
+                            <div class="circular-progress">
+                                <svg>
+                                    <circle class="bg" cx="70" cy="70" r="60"></circle>
+                                    <circle class="bar" id="overview-progress-ring" cx="70" cy="70" r="60"></circle>
+                                </svg>
+                                <div class="percentage-text" id="overview-progress-percent">0%</div>
+                            </div>
+                            <h4 id="overview-progress-status-label" style="font-weight: 700; margin-bottom: 0.5rem;">--</h4>
+                            <p id="overview-progress-desc" style="font-size: 0.8rem; color: var(--color-text-muted);">--</p>
+                            <button class="btn btn-primary btn-sm btn-outline" style="margin-top: 1.25rem; width:100%;" onclick="switchToTab('tab-calculator')">Open Attendance Calculator</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ATTENDANCE LEDGER TAB -->
+            <div id="tab-attendance" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>Subject-wise Attendance Ledger</h2>
+                        <p>Comprehensive record of class hours conducted and attended in this semester</p>
+                    </div>
+                    <div style="font-size: 0.8rem; background-color: #FFFFFF; padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid var(--color-border); font-weight: 600;">
+                        Regulation Minimum: <span style="color: var(--color-safe);">75%</span> | Condonation: <span style="color: var(--color-condonation);">65%</span>
+                    </div>
+                </div>
+
+                <div class="card-panel">
+                    <div class="table-responsive">
+                        <table class="academic-table" id="attendance-table">
+                            <thead>
+                                <tr>
+                                    <th>Subject Code</th>
+                                    <th>Subject Title</th>
+                                    <th class="text-center">Attended Classes</th>
+                                    <th class="text-center">Conducted Classes</th>
+                                    <th class="text-center">Percentage</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendance-table-body">
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MARKS TAB -->
+            <div id="tab-marks" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>Mid & End-Semester Examinations Marks</h2>
+                        <p>Official internal and external marks records for B.Tech III Year I Semester</p>
+                    </div>
+                </div>
+
+                <div class="card-panel">
+                    <h3 class="card-panel-title">Current Semester Gradesheet</h3>
+                    <div class="table-responsive">
+                        <table class="academic-table" id="marks-table">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Subject Title</th>
+                                    <th class="text-center">Mid-I (Max 20)</th>
+                                    <th class="text-center">Mid-II (Max 20)</th>
+                                    <th class="text-center">Assignment (Max 5)</th>
+                                    <th class="text-center">Avg Internals (Max 25)</th>
+                                    <th class="text-center">Semester End (Max 70)</th>
+                                    <th class="text-center">Total (Max 100)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="marks-table-body">
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FEES TAB -->
+            <div id="tab-fees" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>Fee Ledger & Payments</h2>
+                        <p>Review Tuition, Examination, Hostel and Library fees registry and make payments online</p>
+                    </div>
+                </div>
+
+                <div class="fees-grid" id="fees-grid-container">
+                    <!-- Dynamic Fee Cards -->
+                </div>
+
+                <!-- Recent Payments Ledger -->
+                <div class="card-panel">
+                    <h3 class="card-panel-title">Transaction History</h3>
+                    <div class="table-responsive">
+                        <table class="academic-table" id="payments-history-table">
+                            <thead>
+                                <tr>
+                                    <th>Receipt Date</th>
+                                    <th>Fee Category</th>
+                                    <th>Transaction Reference</th>
+                                    <th class="text-right">Paid Amount</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Receipt</th>
+                                </tr>
+                            </thead>
+                            <tbody id="payments-history-body">
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STATS TAB -->
+            <div id="tab-stats" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>Performance Statistics & Insights</h2>
+                        <p>Visual analytics comparing subject-wise attendance standing and examinations grades</p>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+                    <!-- Attendance Graph -->
+                    <div class="card-panel">
+                        <h3 class="card-panel-title">Subject-wise Attendance (%)</h3>
+                        <div style="position: relative; height: 300px; width: 100%;">
+                            <canvas id="chart-attendance"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Marks Graph -->
+                    <div class="card-panel">
+                        <h3 class="card-panel-title">Mid-I Examination Performance</h3>
+                        <div style="position: relative; height: 300px; width: 100%;">
+                            <canvas id="chart-marks"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CALCULATOR TAB -->
+            <div id="tab-calculator" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>B.Tech Autonomous Attendance Calculator</h2>
+                        <p>Evaluate your attendance parameters relative to the 75% standard or medical 65% condonation border</p>
+                    </div>
+                </div>
+
+                <div class="calculator-container">
+                    <!-- Inputs Card -->
+                    <div class="card-panel">
+                        <h3 class="card-panel-title">Attendance Simulator</h3>
+                        
+                        <div class="calculator-inputs">
+                            <!-- Subject Selector -->
+                            <div class="form-group">
+                                <label for="calc-subject-selector">Select Parameter</label>
+                                <select id="calc-subject-selector" class="form-control" onchange="loadSelectedCalcTarget()">
+                                    <option value="aggregate">Aggregate Semester Attendance</option>
+                                    <!-- Subjects dynamically loaded -->
+                                </select>
+                            </div>
+
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem;">
+                                <div class="form-group">
+                                    <label for="calc-input-attended">Classes Attended</label>
+                                    <input type="number" id="calc-input-attended" class="form-control" min="0" value="176" oninput="runCalculator()">
+                                </div>
+                                <div class="form-group">
+                                    <label for="calc-input-conducted">Classes Conducted</label>
+                                    <input type="number" id="calc-input-conducted" class="form-control" min="1" value="244" oninput="runCalculator()">
+                                </div>
+                            </div>
+
+                            <!-- Target Attendance slider -->
+                            <div class="range-slider-group">
+                                <div class="range-slider-labels">
+                                    <span>Target Attendance Percentage</span>
+                                    <span id="calc-slider-target-val" style="color: var(--color-primary); font-weight: 700;">75%</span>
+                                </div>
+                                <input type="range" id="calc-target-slider" class="range-slider" min="50" max="95" value="75" oninput="updateSliderTargetVal()">
+                            </div>
+                        </div>
+
+                        <!-- Regulations Notes -->
+                        <div class="calc-rules-notes">
+                            <h5>VLITS Academic Regulations Rules (Autonomous)</h5>
+                            <ul>
+                                <li><strong>Aggregate Requirement:</strong> Minimum of 75% aggregate attendance is required to sit for end-semester exams.</li>
+                                <li><strong>Condonation (65% - 74.9%):</strong> Academic committee may approve condonation on medical grounds (requires submission of valid medical certificate, application, and paying the stipulated condonation fee).</li>
+                                <li><strong>Detainment (&lt; 65%):</strong> Mandatory detention. Not eligible to sit for examinations, must repeat the semester.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Results Card -->
+                    <div class="calculator-results">
+                        <div>
+                            <h3 style="font-family: var(--font-header); color: var(--color-primary); font-size: 1.1rem; margin-bottom: 1.25rem;">Analysis & Recommendations</h3>
+                            
+                            <!-- Large Status Text -->
+                            <div id="calc-result-status" class="calc-status-box calc-status-condonation">
+                                CONDONATION ZONE (72.13%)
+                            </div>
+
+                            <div class="calc-metric-row">
+                                <span class="calc-metric-label">Current Percentage</span>
+                                <span class="calc-metric-value" id="calc-result-percent">72.13%</span>
+                            </div>
+                            
+                            <div class="calc-metric-row">
+                                <span class="calc-metric-label">Status Summary</span>
+                                <span class="calc-metric-value" id="calc-result-summary" style="font-size:0.9rem; font-weight:500;">Needs Condonation</span>
+                            </div>
+
+                            <div class="calc-metric-row" id="calc-row-classes-to-attend">
+                                <span class="calc-metric-label">Consecutive classes to attend to reach target (<span class="target-pct-lbl">75%</span>)</span>
+                                <span class="calc-metric-value text-danger" id="calc-result-classes-to-attend" style="font-size:1.2rem;">28 classes</span>
+                            </div>
+
+                            <div class="calc-metric-row" id="calc-row-classes-can-skip">
+                                <span class="calc-metric-label">Classes you can safely miss (bunk) while maintaining target (<span class="target-pct-lbl">75%</span>)</span>
+                                <span class="calc-metric-value text-success" id="calc-result-classes-can-skip" style="font-size:1.2rem;">0 classes</span>
+                            </div>
+                            
+                            <div class="calc-metric-row" id="calc-row-consecutive-safeguard">
+                                <span class="calc-metric-label">Classes to attend consecutively to secure min 65% condonation limit</span>
+                                <span class="calc-metric-value" id="calc-result-safeguard" style="font-weight:600; color: var(--color-condonation);">0 classes</span>
+                            </div>
+                        </div>
+
+                        <div style="font-size: 0.75rem; color: var(--color-text-muted); text-align: center; margin-top: 1rem; border-top: 1px solid var(--color-border); padding-top: 0.75rem;">
+                            Formula: Consecutive classes to attend = ⌈ (Target × Conducted - Attended) / (1 - Target) ⌉
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- APPOINTMENTS TAB -->
+            <div id="tab-student-appointments" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>📅 Appointments Scheduler</h2>
+                        <p>Request appointments with faculty members and monitor scheduling statuses</p>
+                    </div>
+                </div>
+
+                <div class="dashboard-row-split-uneven">
+                    <!-- Request Form Card -->
+                    <div class="card-panel" style="height: fit-content;">
+                        <h3 class="card-panel-title">Request Appointment</h3>
+                        <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 1.25rem;">Select a faculty advisor, choose your slot date/time, and state your academic reason.</p>
+                        
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label for="appt-faculty-select" style="font-weight: 600; font-size: 0.85rem;">Select Faculty</label>
+                            <select id="appt-faculty-select" class="form-control">
+                                <!-- Faculty profiles dynamically populated -->
+                            </select>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div class="form-group">
+                                <label for="appt-date-input" style="font-weight: 600; font-size: 0.85rem;">Request Date</label>
+                                <input type="date" id="appt-date-input" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="appt-time-input" style="font-weight: 600; font-size: 0.85rem;">Requested Slot</label>
+                                <input type="text" id="appt-time-input" class="form-control" placeholder="e.g. 10:30 AM or Session-3">
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 1.25rem;">
+                            <label for="appt-reason-input" style="font-weight: 600; font-size: 0.85rem;">Academic Reason</label>
+                            <textarea id="appt-reason-input" class="form-control" rows="4" placeholder="e.g. Doubt clarification on Unit-4 WT lab assignment..."></textarea>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; font-weight: 600;" onclick="submitAppointmentRequest()">Submit Appointment Request</button>
+                    </div>
+
+                    <!-- History Card -->
+                    <div style="display: flex; flex-direction: column;">
+                        <h3 style="font-family: var(--font-header); color: var(--color-primary); font-size: 1.15rem; margin-bottom: 1.25rem; border-bottom: 2px solid var(--color-border); padding-bottom: 0.5rem;">Appointment Scheduling History</h3>
+                        <div class="table-responsive" style="border: 1px solid var(--color-border); border-radius: var(--border-radius-md);">
+                            <table class="academic-table" id="student-appointments-table" style="margin-top: 0; background-color: #FFF;">
+                                <thead style="background-color: var(--color-primary-light); color: white;">
+                                    <tr>
+                                        <th style="padding: 0.75rem 1rem;">Faculty Name</th>
+                                        <th style="padding: 0.75rem 1rem;">Requested Date</th>
+                                        <th style="padding: 0.75rem 1rem;">Slot</th>
+                                        <th style="padding: 0.75rem 1rem;">Status</th>
+                                        <th style="padding: 0.75rem 1rem;">Scheduled Place & Time</th>
+                                        <th style="padding: 0.75rem 1rem; width: 25%;">Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="student-appointments-body">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADVISOR CHAT TAB -->
+            <div id="tab-student-advisor-chat" class="dashboard-tab">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h2>💬 Academic Advisor Chat</h2>
+                        <p>Communicate directly with your assigned advisor, request leave justifications, or submit medical excuse explanations</p>
+                    </div>
+                </div>
+                <div class="dashboard-row-split-uneven">
+                    <!-- Advisor Contact Panel -->
+                    <div class="card-panel" style="height: fit-content;">
+                        <h3 class="card-panel-title">Your Advisor</h3>
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div class="profile-avatar" style="background-color: var(--color-secondary); color: white; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;" id="chat-advisor-avatar">👩‍🏫</div>
+                            <div>
+                                <h4 style="margin: 0; color: var(--color-primary); font-size: 1rem;" id="chat-advisor-name">Dr. K. Sandeep</h4>
+                                <p style="margin: 0; font-size: 0.8rem; color: var(--color-text-muted);" id="chat-advisor-desig">HOD - ECE</p>
+                            </div>
+                        </div>
+                        <p style="font-size: 0.85rem; line-height: 1.4; color: var(--color-text-muted); margin-bottom: 1rem;">
+                            Feel free to message your advisor regarding attendance shortages, exam eligibility requirements, or assignment queries.
+                        </p>
+                        <div style="font-size: 0.8rem; background-color: var(--color-bg-main); padding: 0.75rem; border-radius: 6px; border: 1px solid var(--color-border);">
+                            <span style="font-weight: 700; color: var(--color-primary);">Notice:</span> Keep justifications professional. Attach physical medical slips when attending class.
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Panel -->
+                    <div class="card-panel" style="display: flex; flex-direction: column; height: 520px;">
+                        <h3 class="card-panel-title">Conversation Logs</h3>
+                        <div id="chat-messages-box" style="flex-grow: 1; overflow-y: auto; padding: 1.25rem; background-color: var(--color-bg-main); border-radius: var(--border-radius-md); border: 1px solid var(--color-border); margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
+                            <!-- Dynamically loaded chat items -->
+                        </div>
+                        <div style="display: flex; gap: 0.75rem;">
+                            <input type="text" id="chat-student-input" class="form-control" placeholder="Type a message or justification..." onkeydown="if(event.key === 'Enter') sendStudentChatMessage()">
+                            <button class="btn btn-primary" onclick="sendStudentChatMessage()" style="font-weight: 600; padding: 0.6rem 1.5rem;">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- PAYMENT MODAL -->
+    <div class="modal" id="payment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="payment-modal-title">Fee Payment</span>
+                <button class="modal-close" onclick="closePaymentModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <!-- Payment Input Form -->
+                <div id="payment-form-pane">
+                    <div style="background-color: var(--color-bg-main); padding: 1rem; border-radius: 6px; margin-bottom: 1.25rem; font-size: 0.9rem;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem;">
+                            <span style="color:var(--color-text-muted);">Fee Category:</span>
+                            <strong id="pay-modal-category">Tuition Fee</strong>
+                        </div>
+                        <div style="display:flex; justify-content:space-between;">
+                            <span style="color:var(--color-text-muted);">Pending Balance:</span>
+                            <strong style="color:var(--color-secondary); font-size:1.05rem;" id="pay-modal-balance">₹20,000</strong>
+                        </div>
+                    </div>
+
+                    <form id="payment-process-form">
+                        <input type="hidden" id="pay-modal-fee-key" value="">
+                        
+                        <div class="form-group">
+                            <label for="pay-amount-input">Amount to Pay (₹)</label>
+                            <input type="number" id="pay-amount-input" class="form-control" min="1" required>
+                        </div>
+                        
+                        <div style="display:grid; grid-template-columns: 2fr 1fr; gap:0.75rem; margin-top:1rem;">
+                            <div class="form-group">
+                                <label for="pay-card-no">Simulated Card Number</label>
+                                <input type="text" id="pay-card-no" class="form-control" placeholder="4111 2222 3333 4444" value="4111 2222 3333 4444" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pay-card-cvv">CVV</label>
+                                <input type="password" id="pay-card-cvv" class="form-control" placeholder="123" value="123" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Payment Success Pane -->
+                <div class="payment-success-pane" id="payment-success-pane">
+                    <span class="success-icon">✓</span>
+                    <h3 style="color: var(--color-safe); margin-bottom: 0.5rem;">Payment Successful!</h3>
+                    <p style="font-size:0.85rem; color:var(--color-text-muted); margin-bottom:1.5rem;" id="payment-success-message">
+                        Transaction Completed. Ref ID: TXN93821093. Balance paid: ₹20,000
+                    </p>
+                    <button class="btn btn-outline" onclick="printSimulatedReceipt()">🖨️ View & Print Receipt</button>
+                </div>
+            </div>
+            <div class="modal-footer" id="payment-modal-footer">
+                <button class="btn btn-outline" style="padding: 0.5rem 1rem;" onclick="closePaymentModal()">Cancel</button>
+                <button class="btn btn-primary" style="padding: 0.5rem 1.25rem;" onclick="submitPayment()">Authorize Payment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRINTABLE RECEIPT LAYOUT (HIDDEN UNTIL PRINT) -->
+    <div id="receipt-print-area" style="display:none;">
+        <div class="receipt-box">
+            <div class="receipt-header">
+                <h3>VIGNAN'S LARA</h3>
+                <h4 style="font-family: var(--font-body); font-size: 0.85rem; letter-spacing:1px; margin-top:3px; color: var(--color-primary-light);">
+                    INSTITUTE OF TECHNOLOGY & SCIENCE
+                </h4>
+                <p>Approved by AICTE New Delhi & Affiliated to JNTUK Kakinada | Vadlamudi, AP</p>
+                <div style="font-size: 0.8rem; font-weight: 700; margin-top: 10px; text-transform: uppercase;">
+                    Official Fee E-Receipt
+                </div>
+            </div>
+
+            <div class="receipt-details-grid">
+                <div class="receipt-meta-item">
+                    <span style="color:var(--color-text-muted);">Registration No:</span> <strong id="receipt-val-regd">--</strong>
+                </div>
+                <div class="receipt-meta-item">
+                    <span style="color:var(--color-text-muted);">Receipt Date:</span> <strong id="receipt-val-date">--</strong>
+                </div>
+                <div class="receipt-meta-item">
+                    <span style="color:var(--color-text-muted);">Student Name:</span> <strong id="receipt-val-name">--</strong>
+                </div>
+                <div class="receipt-meta-item">
+                    <span style="color:var(--color-text-muted);">Transaction Ref:</span> <strong id="receipt-val-ref">--</strong>
+                </div>
+                <div class="receipt-meta-item">
+                    <span style="color:var(--color-text-muted);">Branch & Year:</span> <strong id="receipt-val-branch">--</strong>
+                </div>
+                <div class="receipt-meta-item">
+                    <span style="color:var(--color-text-muted);">Payment Channel:</span> <strong>Simulated Portal</strong>
+                </div>
+            </div>
+
+            <table class="receipt-table">
+                <thead>
+                    <tr>
+                        <th>Fee Description</th>
+                        <th class="text-right" style="width: 150px;">Paid Amount (INR)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="receipt-val-desc">Tuition Fee Payment (Part Payment / Balance)</td>
+                        <td class="text-right font-bold" id="receipt-val-amount">₹0.00</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="receipt-footer-notes">
+                <p>This is a computer-generated transaction receipt and does not require a physical signature.</p>
+                <p style="margin-top: 5px; color: var(--color-text-muted);">
+                    © 2026 VLITS Accounts Branch, Vadlamudi.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Action button to dismiss or trigger browser print -->
+        <div style="text-align: center; margin-top: 2rem;" class="no-print">
+            <button class="btn btn-primary" onclick="window.print()">Print Receipt</button>
+            <button class="btn btn-outline" onclick="closePrintView()">Back to Dashboard</button>
+        </div>
+    </div>
+
+    <!-- Toast Notice -->
+    <div class="toast" id="dashboard-toast">
+        <span id="toast-icon">ℹ️</span>
+        <span id="toast-message">Logged in successfully!</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/data.js?v=1.1"></script>
+    <script src="js/student.js?v=1.1"></script>
+</body>
+</html>

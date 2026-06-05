@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VLITS - Student & Faculty Portal | Vignan's Lara Institute of Technology & Science</title>
+    <meta name="description" content="Official Student and Faculty Portal of Vignan's Lara Institute of Technology & Science (VLITS), Vadlamudi. Access attendance, marks, fees, and academic statistics.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Top Contact Bar -->
+    <div style="background-color: var(--color-primary); color: #E2E8F0; padding: 0.4rem 2rem; display: flex; justify-content: space-between; font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: 500;">
+        <div>
+            <span>📍 Vadlamudi, Chebrolu Mandal, Guntur, Andhra Pradesh - 522213</span>
+        </div>
+        <div style="display: flex; gap: 1.5rem;">
+            <span>📞 Info: +91 91771 66116</span>
+            <span>✉️ Email: prashanthrishi789@gmail.com</span>
+        </div>
+    </div>
+
+    <!-- College Header -->
+    <header class="college-header">
+        <div class="logo-container">
+            <!-- Looks for local logo. If missing, displays stylized CSS graphic -->
+            <img class="college-logo-img" src="vignans_lara_logo.png" alt="VLITS Logo" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
+            
+            <div id="logo-fallback" style="display:none; width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #0B2545, #A30000); color: #FFF; font-weight: 800; font-size: 1.4rem; align-items: center; justify-content: center; border: 3px solid #FFF; box-shadow: var(--shadow-sm);">VL</div>
+            
+            <div class="logo-divider"></div>
+            <span class="portal-label">Portal Gateway</span>
+        </div>
+        <div class="header-meta">
+            <div id="current-date-time">Thursday, June 4, 2026</div>
+            <div style="font-size: 0.75rem; color: var(--color-secondary); font-weight: 700;">AUTONOMOUS COLLEGE PORTAL</div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <span class="hero-subtitle">WELCOME TO THE OFFICIAL ACADEMIC PORTAL</span>
+        <h2 class="hero-title">VLITS STUDENT & FACULTY GATEWAY</h2>
+        <div class="hero-divider"></div>
+        <p class="hero-desc">
+            A comprehensive, digital terminal for students and academicians of Vignan's Lara Institute of Technology & Science. Track attendance, monitor academic performance, manage fee registries, and compute autonomous compliance.
+        </p>
+    </section>
+
+    <!-- Portal Selection Section -->
+    <main class="portal-selection-container">
+        <!-- Student Card -->
+        <section class="portal-card portal-card-student">
+            <div class="portal-card-icon">🎓</div>
+            <h2>Student Portal</h2>
+            <p>Access your subject-wise attendance ledger, track semester marks, review fee records, and run the JNTUK autonomous attendance calculator.</p>
+            <a href="student-login.html" class="btn btn-primary">Student Login →</a>
+            <div style="margin-top: 1rem; font-size: 0.75rem; color: var(--color-text-muted);">
+                Test Account ID: <strong>24fe1a0487</strong>
+            </div>
+        </section>
+
+        <!-- Faculty Card -->
+        <section class="portal-card portal-card-faculty">
+            <div class="portal-card-icon">👨‍🏫</div>
+            <h2>Faculty Portal</h2>
+            <p>Mark daily lecture attendance, input internal/external exam marks, audit student performances, and batch upload rosters via Excel sheets.</p>
+            <a href="faculty-login.html" class="btn btn-secondary">Faculty Login →</a>
+            <div style="margin-top: 1rem; font-size: 0.75rem; color: var(--color-text-muted);">
+                Test Account ID: <strong>24fe1a0487</strong>
+            </div>
+        </section>
+    </main>
+
+    <!-- Stats & notice board on Landing -->
+    <section class="landing-info-section">
+        <div class="section-header-classic">
+            <h2>Campus Analytics & Notice Board</h2>
+        </div>
+
+        <!-- Campus Stats Row -->
+        <div class="quick-stats-grid">
+            <div class="quick-stat-box">
+                <div class="quick-stat-number">4,200+</div>
+                <div class="quick-stat-label">Active Students</div>
+            </div>
+            <div class="quick-stat-box">
+                <div class="quick-stat-number">280+</div>
+                <div class="quick-stat-label">Experienced Faculty</div>
+            </div>
+            <div class="quick-stat-box">
+                <div class="quick-stat-number">94.8%</div>
+                <div class="quick-stat-label">B.Tech Pass Rate</div>
+            </div>
+            <div class="quick-stat-box">
+                <div class="quick-stat-number">75%</div>
+                <div class="quick-stat-label">Attendance Target</div>
+            </div>
+        </div>
+
+        <!-- Columns: Notices & Calendar -->
+        <div class="info-columns-grid">
+            <!-- Notices -->
+            <div class="info-pane">
+                <h3>📢 Academic Announcements</h3>
+                <ul class="notice-list" id="notices-container">
+                    <!-- Dynamic Notice Items Loaded via JS -->
+                </ul>
+            </div>
+ 
+            <!-- Calendar -->
+            <div class="info-pane">
+                <h3>🗓️ Academic Calendar</h3>
+                <ul class="notice-list" id="calendar-container">
+                    <!-- Dynamic Calendar Items Loaded via JS -->
+                </ul>
+            </div>
+        </div>
+    </section>
+ 
+    <!-- Footer -->
+    <footer class="college-footer">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4 style="font-family: var(--font-header);">About VLITS</h4>
+                <p style="font-size:0.8rem; margin-top:0.5rem; text-align:justify;">
+                    Vignan's Lara Institute of Technology & Science, Vadlamudi is a premier engineering college affiliated with JNTUK, Kakinada and approved by AICTE. Known for its academic excellence, cutting-edge laboratories, and exceptional placement records.
+                </p>
+            </div>
+            <div class="footer-col">
+                <h4 style="font-family: var(--font-header);">Quick Links</h4>
+                <ul style="margin-top:0.5rem;">
+                    <li><a href="https://vignanlara.org" target="_blank">🔗 Official College Website</a></li>
+                    <li><a href="student-login.html">🎓 Student Portal Login</a></li>
+                    <li><a href="faculty-login.html">👨‍🏫 Faculty Portal Login</a></li>
+                    <li><a href="index.html">🏠 Home Page</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4 style="font-family: var(--font-header);">JNTUK Compliance</h4>
+                <p style="font-size:0.8rem; margin-top:0.5rem; text-align:justify;">
+                    This portal incorporates the official JNTUK Kakinada B.Tech Academic Regulations. All attendance aggregations and exam eligibility evaluations adhere strictly to the 75% aggregate standard with condonation exceptions.
+                </p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div>
+                © 2026 Vignan's Lara Institute of Technology & Science. All Rights Reserved.
+            </div>
+            <div>
+                Maintained by ECE
+            </div>
+        </div>
+    </footer>
+ 
+    <!-- Script to set current date and load data.js to initialize localstorage -->
+    <script src="js/data.js"></script>
+    <script>
+        // Update header date
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date-time').innerText = new Date().toLocaleDateString('en-US', options);
+
+        // Load notices and calendar events dynamically
+        async function loadAnnouncements() {
+            try {
+                const list = await DB.getAnnouncements();
+                const noticesContainer = document.getElementById('notices-container');
+                const calendarContainer = document.getElementById('calendar-container');
+                
+                if (noticesContainer && calendarContainer) {
+                    noticesContainer.innerHTML = '';
+                    calendarContainer.innerHTML = '';
+                    
+                    const notices = list.filter(a => a.type === 'notice');
+                    const calendar = list.filter(a => a.type === 'calendar');
+                    
+                    if (notices.length === 0) {
+                        noticesContainer.innerHTML = '<li class="notice-item" style="color: var(--color-text-muted); padding: 1rem 0;">No active announcements at this time.</li>';
+                    } else {
+                        notices.forEach(item => {
+                            noticesContainer.innerHTML += `
+                                <li class="notice-item">
+                                    <div class="notice-date">${item.date}</div>
+                                    <div>
+                                        <div class="notice-title">${item.title}</div>
+                                        <div class="notice-desc">${item.desc}</div>
+                                    </div>
+                                </li>
+                            `;
+                        });
+                    }
+                    
+                    if (calendar.length === 0) {
+                        calendarContainer.innerHTML = '<li class="notice-item" style="color: var(--color-text-muted); padding: 1rem 0;">No scheduled events in the academic calendar.</li>';
+                    } else {
+                        calendar.forEach(item => {
+                            calendarContainer.innerHTML += `
+                                <li class="notice-item">
+                                    <div class="notice-date">${item.date}</div>
+                                    <div>
+                                        <div class="notice-title">${item.title}</div>
+                                        <div class="notice-desc">${item.desc}</div>
+                                    </div>
+                                </li>
+                            `;
+                        });
+                    }
+                }
+            } catch (err) {
+                console.error("Failed to load announcements:", err);
+            }
+        }
+        window.addEventListener('DOMContentLoaded', loadAnnouncements);
+    </script>
+</body>
+</html>
