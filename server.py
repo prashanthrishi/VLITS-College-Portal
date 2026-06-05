@@ -13,7 +13,7 @@ import random
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 
 DB_FILE = 'vlits.db'
-PORT = 8000
+PORT = int(os.environ.get('PORT', 8000))
 
 # SQL Queries to initialize database schema
 SCHEMA_SQL = """
